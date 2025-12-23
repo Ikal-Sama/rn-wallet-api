@@ -7,12 +7,14 @@ export const arcjetMiddleware = async (req, res, next) => {
       req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
       req.headers["x-real-ip"] ||
       req.ip ||
-      req.connection.remoteAddress;
+      req.connection.remoteAddress ||
+      "127.0.0.1"; // Fallback for development
 
-    // Add IP to request object for Arcjet
-    req.ip = ip;
-
-    const decision = await aj.protect(req, { requested: 1 });
+    // Pass IP directly to Arcjet via context
+    const decision = await aj.protect(req, {
+      requested: 1,
+      ip: ip, // Explicitly provide the IP to Arcjet
+    });
 
     console.log(`Arcjet decision for IP ${ip}:`, {
       conclusion: decision.conclusion,
