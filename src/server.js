@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { initDB } from "./config/db.js";
-import { arcjetMiddleware } from "./middlewares/arcjet.middleware.js";
+import { rateLimitMiddleware } from "./middlewares/ratelimit.middleware.js";
 dotenv.config();
 const PORT = process.env.PORT || 5001;
 
@@ -14,13 +14,8 @@ const app = express();
 app.set("trust proxy", true);
 app.use(express.json());
 
-// Only use Arcjet in production
-if (process.env.NODE_ENV === "production") {
-  app.use(arcjetMiddleware);
-  console.log("Arcjet protection enabled");
-} else {
-  console.log("Arcjet protection disabled (development mode)");
-}
+// Apply rate limiting to all API routes
+app.use("/api/", rateLimitMiddleware);
 
 app.use("/api/transactions", transactionRoutes);
 

@@ -13,8 +13,9 @@
   "type": "module",
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.15",
-    "@arcjet/node": "^1.0.0-beta.15",
     "@neondatabase/serverless": "^1.0.2",
+    "@upstash/ratelimit": "^2.0.7",
+    "@upstash/redis": "^1.35.8",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1"
