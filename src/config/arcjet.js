@@ -12,7 +12,7 @@ dotenv.config();
 // Helper function to initialize Arcjet
 export const aj = arcjet({
   key: process.env.ARCJET_KEY,
-  characteristics: ["ip.src"], // Track requests by IP
+  // Don't use characteristics here - we'll pass IP explicitly in middleware
   rules: [
     // Shield protects your app from common attacks e.g. SQL injection
     shield({ mode: "LIVE" }),

@@ -2,13 +2,28 @@ import { aj } from "../config/arcjet.js";
 
 export const arcjetMiddleware = async (req, res, next) => {
   try {
+    // Log headers for debugging
+    console.log("Request headers:", {
+      "x-forwarded-for": req.headers["x-forwarded-for"],
+      "x-real-ip": req.headers["x-real-ip"],
+      "req.ip": req.ip,
+      remoteAddress: req.connection.remoteAddress,
+    });
+
     // Extract IP from proxy headers (Render uses X-Forwarded-For)
-    const ip =
+    let ip =
       req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
       req.headers["x-real-ip"] ||
       req.ip ||
       req.connection.remoteAddress ||
       "127.0.0.1"; // Fallback for development
+
+    // Convert IPv6 localhost to IPv4
+    if (ip === "::1" || ip === "::ffff:127.0.0.1") {
+      ip = "127.0.0.1";
+    }
+
+    console.log(`Extracted IP: ${ip}`);
 
     // Pass IP directly to Arcjet via context
     const decision = await aj.protect(req, {
