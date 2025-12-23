@@ -10,6 +10,8 @@ import transactionRoutes from "./routes/transactions.route.js";
 const app = express();
 
 // middlewares
+// Trust proxy - required for Render deployment to get correct client IP
+app.set("trust proxy", true);
 app.use(express.json());
 
 // Only use Arcjet in production
